@@ -15,6 +15,7 @@ Table of Contents
     - [Reusable templates](Examples.md#reusable-templates)
  - [Configuration](Configuration.md)
     - [`head` element merging](Configuration.md#head-element-merging)
+    - [Layout context naming](Configuration.md#layout-context-naming)
 
 ---
 

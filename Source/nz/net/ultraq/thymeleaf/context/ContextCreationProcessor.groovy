@@ -32,14 +32,18 @@ class ContextCreationProcessor extends AbstractTemplateBoundariesProcessor {
 
 	static final int PROCESSOR_PRECEDENCE = 10
 
+	private final String contextKey
+
 	/**
 	 * Constructor, sets the template mode of the processor.
 	 * 
 	 * @param templateMode
+	 * @param contextKey
 	 */
-	ContextCreationProcessor(TemplateMode templateMode) {
+	ContextCreationProcessor(TemplateMode templateMode, String contextKey) {
 
 		super(templateMode, PROCESSOR_PRECEDENCE)
+		this.contextKey = contextKey
 	}
 
 	/**
@@ -54,7 +58,8 @@ class ContextCreationProcessor extends AbstractTemplateBoundariesProcessor {
 	void doProcessTemplateStart(ITemplateContext context, ITemplateStart templateStart,
 		ITemplateBoundariesStructureHandler structureHandler) {
 
-		context[LayoutContext.CONTEXT_KEY] = new LayoutContext()
+		context[LayoutContext.CONTEXT_KEY] = contextKey
+		context[contextKey] = new LayoutContext()
 	}
 
 	/**

@@ -26,7 +26,7 @@ import org.thymeleaf.context.IContext
  */
 class LayoutContext extends HashMap<String,Object> {
 
-	static final String CONTEXT_KEY = 'layout'
+	static final String CONTEXT_KEY = 'LayoutDialect::ContextKey'
 
 	/**
 	 * Retrieve the layout dialect context on the Thymeleaf context.
@@ -36,15 +36,19 @@ class LayoutContext extends HashMap<String,Object> {
 	 */
 	static LayoutContext forContext(IContext context) {
 
-		def dialectContext = context[CONTEXT_KEY]
+		def layoutContextKey = context[CONTEXT_KEY]
+		def dialectContext = context[layoutContextKey]
 
 		// Error if something has gone and taken this value.  Hopefully there aren't
 		// any collisions, but this name isn't exactly rare, so it *just* might
 		// happen.
 		if (dialectContext && !(dialectContext instanceof LayoutContext)) {
 			throw new IllegalStateException(
-				'Name collision on the Thymeleaf processing context.  ' +
-				'An object with the key "layout" already exists, but is needs to be free for the Layout Dialect to work.'
+				"Name collision on the Thymeleaf processing context.  An object with the " +
+				"key \"${layoutContextKey}\" already exists, but was expected to be " +
+				"reserved for the layout dialect.  To prevent this from happening, you " +
+				"can configure the layout dialect to use a different key for its context. " +
+				"See (URL) for details."
 			)
 		}
 

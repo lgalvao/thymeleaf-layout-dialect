@@ -112,3 +112,38 @@ XML config for Spring:
 
 If neither strategy suits your needs, you can implement your own `SortingStrategy`
 and pass it along to the Layout dialect like above.
+
+
+Layout context naming
+---------------------
+
+The layout dialect creates a special object, `layout`, on the Thymeleaf context,
+which is a map of values that might be useful in your templates.  The available
+values are mentioned throughout these docs, but the key, `layout`, is itself
+configurable if you need to use the "layout" value for whatever reason.
+
+To change the value, configure the layout dialect like so:
+
+```java
+TemplateEngine templateEngine = new TemplateEngine();  // Or SpringTemplateEngine for Spring
+templateEngine.addDialect(new LayoutDialect("layoutContextName"));
+```
+
+XML config for Spring:
+
+```xml
+<bean id="groupingStrategy" class="nz.net.ultraq.thymeleaf.decorators.strategies.GroupingStrategy"/>
+
+<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+  <property name="additionalDialects">
+    <set>
+      <bean class="nz.net.ultraq.thymeleaf.LayoutDialect">
+        <constructor-arg type="java.lang.String" value="layoutContextName"/>
+      </bean>
+    </set>
+  </property>
+</bean>
+```
+
+You can now access the values like `resultingTitle` via the name you've
+specified.  As per the examples above, this would be `layoutContextName.resultingTitle`.

@@ -17,6 +17,7 @@
 package nz.net.ultraq.thymeleaf
 
 import nz.net.ultraq.thymeleaf.context.ContextCreationProcessor
+import nz.net.ultraq.thymeleaf.context.LayoutContext
 import nz.net.ultraq.thymeleaf.context.extensions.IContextExtensions
 import nz.net.ultraq.thymeleaf.decorators.DecorateProcessor
 import nz.net.ultraq.thymeleaf.decorators.DecoratorProcessor
@@ -53,6 +54,8 @@ class LayoutDialect extends AbstractProcessorDialect {
 	static final String DIALECT_PREFIX = 'layout'
 	static final int DIALECT_PRECEDENCE = 10
 
+	private static final String DEFAULT_CONTEXT_KEY = 'layout'
+
 	/**
 	 * Apply object extensions.
 	 */
@@ -74,16 +77,48 @@ class LayoutDialect extends AbstractProcessorDialect {
 		]*.apply()
 	}
 
+	private final String contextKey
 	private final SortingStrategy sortingStrategy
+
+	/**
+	 * Constructor, use the layout dialect with all its defaults.
+	 */
+	LayoutDialect() {
+
+		this(DEFAULT_CONTEXT_KEY, new AppendingStrategy())
+	}
+
+	/**
+	 * Constructor, configure the layout dialect with a non-standard context name.
+	 * 
+	 * @param contextKey
+	 */
+	LayoutDialect(String contextKey) {
+
+		this(contextKey, new AppendingStrategy())
+	}
 
 	/**
 	 * Constructor, configure the layout dialect with the given sorting strategy.
 	 * 
 	 * @param sortingStrategy
 	 */
-	LayoutDialect(SortingStrategy sortingStrategy = new AppendingStrategy()) {
+	LayoutDialect(SortingStrategy sortingStrategy) {
+
+		this(DEFAULT_CONTEXT_KEY, sortingStrategy)
+	}
+
+	/**
+	 * Constructor, configure the layout dialect sorting strategy and context
+	 * name.
+	 * 
+	 * @param contextKey
+	 * @param sortingStrategy
+	 */
+	LayoutDialect(String contextKey, SortingStrategy sortingStrategy) {
 
 		super(DIALECT_NAME, DIALECT_PREFIX, DIALECT_PRECEDENCE)
+		this.contextKey      = contextKey
 		this.sortingStrategy = sortingStrategy
 	}
 
@@ -99,7 +134,7 @@ class LayoutDialect extends AbstractProcessorDialect {
 		return [
 			// Processors available in the HTML template mode
 			new StandardXmlNsTagProcessor(TemplateMode.HTML, dialectPrefix),
-			new ContextCreationProcessor(TemplateMode.HTML),
+			new ContextCreationProcessor(TemplateMode.HTML, contextKey),
 			new DecorateProcessor(TemplateMode.HTML, dialectPrefix, sortingStrategy),
 			new DecoratorProcessor(TemplateMode.HTML, dialectPrefix, sortingStrategy),
 			new IncludeProcessor(TemplateMode.HTML, dialectPrefix),
@@ -110,7 +145,7 @@ class LayoutDialect extends AbstractProcessorDialect {
 
 			// Processors available in the XML template mode
 			new StandardXmlNsTagProcessor(TemplateMode.XML, dialectPrefix),
-			new ContextCreationProcessor(TemplateMode.XML),
+			new ContextCreationProcessor(TemplateMode.XML, contextKey),
 			new DecorateProcessor(TemplateMode.XML, dialectPrefix, sortingStrategy),
 			new DecoratorProcessor(TemplateMode.XML, dialectPrefix, sortingStrategy),
 			new IncludeProcessor(TemplateMode.XML, dialectPrefix),
