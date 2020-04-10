@@ -49,14 +49,18 @@ class FragmentMap extends HashMap<String,List<IModel>> {
 	 * @param context
 	 * @param structureHandler
 	 * @param fragments The new fragments to add to the map.
+	 * @param isIncludeProcessing
 	 */
 	static void setForNode(IContext context, IElementModelStructureHandler structureHandler,
-		Map<String,List<IModel>> fragments) {
+		Map<String,List<IModel>> fragments, boolean isIncludeProcessing = false) {
 
 		structureHandler.setLocalVariable(FRAGMENT_COLLECTION_KEY,
 			get(context).inject(fragments.clone()) { accumulator, fragmentName, fragmentList ->
 				if (accumulator[fragmentName]) {
 					accumulator[fragmentName] += fragmentList
+					if (isIncludeProcessing) {
+						accumulator[fragmentName].reverse(true)
+					}
 				}
 				else {
 					accumulator[fragmentName] = fragmentList
