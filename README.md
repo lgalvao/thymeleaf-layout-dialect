@@ -27,7 +27,7 @@ The Thymeleaf Layout Dialect adds the ability to decorate templates -
 automatically for the `<head>` section of an HTML template, and explicitly
 through extension points that developers can add to their templates.  This all
 adds up to create layouts that can be extended in a manner similar to classical
-inheritence.
+inheritance.
 
 For example, given a common `layout.html` file, set some shared static assets in
 the `<head>` and define extension points in the body with the `layout:fragment`
@@ -52,9 +52,9 @@ processor:
 ```
 
 Create a content template that will define its own title, static resources, and
-replacements for those extension points.  Link the page to the layout by using
-the `layout:decorate` processor at the root element of the page which will
-instruct Thymeleaf to decorate the layout with this template:
+replacements for those extension points. Link the page to the layout by using
+the `layout:decorate` processor at the root element of the page, which will
+instruct Thymeleaf to decorate the layout with the template:
 
 ```html
 <!DOCTYPE html>
